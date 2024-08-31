@@ -1,13 +1,13 @@
-app-id: com.nextcloud.desktopclient.nextcloud
+app-id: com.owncloud.desktopclient.owncloud
 
 runtime: org.kde.Platform
-runtime-version: 5.15-23.08
+runtime-version: 6.7
 sdk: org.kde.Sdk
 
 base: io.qt.qtwebengine.BaseApp
-base-version: 5.15-23.08
+base-version: 6.7
 
-command: nextcloud
+command: owncloud
 
 finish-args:
   - --device=dri
@@ -16,11 +16,11 @@ finish-args:
   - --share=network
   - --share=ipc
   - --filesystem=host:rw
-  - --filesystem=xdg-run/Nextcloud:create
+  # - --filesystem=xdg-run/Nextcloud:create
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.freedesktop.secrets
   - --talk-name=org.kde.StatusNotifierWatcher
-  - --own-name=com.nextcloudgmbh.Nextcloud
+  # - --own-name=com.nextcloudgmbh.Nextcloud
   - --talk-name=org.kde.kwalletd5
   - --talk-name=org.kde.kwalletd6
   - --env=TMPDIR=/var/tmp
@@ -38,19 +38,16 @@ modules:
     config-opts:
       - -DCMAKE_INSTALL_LIBDIR=lib
       - -DBUILD_TRANSLATIONS=NO
+      - -DBUILD_WITH_QT6=ON
     cleanup:
       - /include
       - /mkspecs
       - /lib/cmake
     sources:
-      - type: archive
-        url: https://github.com/frankosterfeld/qtkeychain/archive/0.14.2.tar.gz
-        sha256: cf2e972b783ba66334a79a30f6b3a1ea794a1dc574d6c3bebae5ffd2f0399571
-        x-checker-data:
-          type: anitya
-          url-template: https://github.com/frankosterfeld/qtkeychain/archive/$version.tar.gz
-          stable-only: true
-          project-id: 4138
+      - type: git
+        url: https://github.com/frankosterfeld/qtkeychain.git
+        tag: 0.14.3
+        commit: 38ff50766c7e4ec490fecb2d9939b7cdc4b74b8e
 
   - name: rsvg-convert-shim
     buildsystem: simple
@@ -72,35 +69,44 @@ modules:
         tag: 0.3.4
         commit: 141fb072cc5080a8c547b8a536a45c0f9cf65691
 
-  - name: nextcloud-client
+  - name: libre-graph-api
+    buildsystem: cmake
+    subdir: client
+    sources:
+      - type: git
+        url: https://github.com/owncloud/libre-graph-api-cpp-qt-client.git
+        tag: v1.0.4
+        commit: 2fab9dbbdeed0c9a4bf3b1dbc21b8dd482b159a0
+
+  - name: KDSingleApplication
+    buildsystem: cmake
+    config-opts:
+      - -DKDSingleApplication_QT6=true
+    sources:
+      - type: git
+        url: https://github.com/KDAB/KDSingleApplication
+        tag: v1.1.0
+        commit: cb0c664b40d3b31bad30aa3521eff603162ed0bd
+
+  - name: owncloud-client
     buildsystem: cmake
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_LIBDIR=lib
-      - -DNO_SHIBBOLETH=1
-      - -DBUILD_SHELL_INTEGRATION_DOLPHIN=0
-      - -DBUILD_SHELL_INTEGRATION_NAUTILUS=0
-      - -DBUILD_UPDATER=OFF
-      - -DPLUGIN_INSTALL_DIR=/app/lib/plugins
-      - -DPLUGINDIR=/app/lib/plugins
+      - -DBUILD_SHELL_INTEGRATION=OFF
+      - -DWITH_AUTO_UPDATER=OFF
     cleanup:
       - /include
     post-install:
-      - install -Dm644 -t /app/share/metainfo com.nextcloud.desktopclient.nextcloud.metainfo.xml
+      - install -Dm644 -t /app/share/metainfo com.owncloud.desktopclient.owncloud.metainfo.xml
+      - install -Dm644 src/resources/theme/universal/owncloud-icon.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
+      - sed -e "s|Icon=owncloud|Icon=${FLATPAK_ID}|g" src/gui/owncloud.desktop > ${FLATPAK_ID}.desktop
+      - install -Dm644 ${FLATPAK_ID}.desktop -t ${FLATPAK_DEST}/share/applications
+      - install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo
     sources:
       - type: git
-        url: https://github.com/nextcloud/desktop.git
-        tag: v3.12.3
-        commit: e4ad64aa1950ed482485be416d50296bc2130e20
-        x-checker-data:
-          type: json
-          url: https://api.github.com/repos/nextcloud/desktop/releases/latest
-          tag-query: .tag_name
-          version-query: $tag | sub("^[vV]"; "")
-          timestamp-query: .published_at
-      - type: patch
-        path: dbus-service-path.patch
-      - type: patch
-        path: icon-name.patch
+        url: https://github.com/owncloud/client.git
+        tag: v5.3.1
+        commit: f15fd5635eb4b24e7e5a29a36a882628fb87a1e9
       - type: file
-        path: com.nextcloud.desktopclient.nextcloud.metainfo.xml
+        path: com.owncloud.desktopclient.owncloud.metainfo.xml
