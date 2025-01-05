@@ -34,7 +34,7 @@ modules:
   - shared-modules/libsecret/libsecret.json
 
   - name: qtkeychain
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_INSTALL_LIBDIR=lib
       - -DBUILD_TRANSLATIONS=NO
@@ -70,7 +70,7 @@ modules:
         commit: 9702091d5f77c2d1dfe1f8ca254c0910738da359
 
   - name: libre-graph-api
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     subdir: client
     sources:
       - type: git
@@ -79,7 +79,7 @@ modules:
         commit: 2fab9dbbdeed0c9a4bf3b1dbc21b8dd482b159a0
 
   - name: KDSingleApplication
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DKDSingleApplication_QT6=true
     sources:
@@ -89,7 +89,7 @@ modules:
         commit: cb0c664b40d3b31bad30aa3521eff603162ed0bd
 
   - name: owncloud-client
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_LIBDIR=lib
