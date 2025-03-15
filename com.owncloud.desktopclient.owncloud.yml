@@ -106,7 +106,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/owncloud/client.git
-        tag: v5.3.1
-        commit: f15fd5635eb4b24e7e5a29a36a882628fb87a1e9
+        tag: v5.3.2
+        commit: 1e2be1dee795e48d3a8d42ea5a6a419f1c83556c
       - type: file
         path: com.owncloud.desktopclient.owncloud.metainfo.xml

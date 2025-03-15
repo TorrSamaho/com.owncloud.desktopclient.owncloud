@@ -27,6 +27,7 @@ to the client, you can work with your files even when you are not online!</p>
   </branding>
   <url type="homepage">https://owncloud.com</url>
   <releases>
+    <release version="5.3.2" date="2025-01-21"/>
     <release version="5.3.1" date="2024-06-11"/>
   </releases>
   <content_rating type="oars-1.1"/>
