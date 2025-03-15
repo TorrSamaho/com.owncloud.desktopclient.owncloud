@@ -46,8 +46,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/frankosterfeld/qtkeychain.git
-        tag: 0.14.3
-        commit: 38ff50766c7e4ec490fecb2d9939b7cdc4b74b8e
+        tag: 0.15.0
+        commit: ad7344c45a86a4f66cbafc4b081b5f7b876cb0b7
 
   - name: rsvg-convert-shim
     buildsystem: simple
